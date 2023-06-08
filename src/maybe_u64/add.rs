@@ -99,17 +99,17 @@ mod test {
 
     use crate::{bn254_fr::FrInteral, maybe_u64::MaybeU64Coversion, MaybeU64};
 
-    type TestField = MaybeU64<FrInteral>;
+    type MockField = MaybeU64<FrInteral>;
 
     #[test]
     fn addition() {
         let mut rng = test_rng();
 
         for _ in 0..100 {
-            let a = TestField::random_u64(&mut rng);
-            let b = TestField::random_field(&mut rng);
-            let c = TestField::U64(u64::MAX);
-    
+            let a = MockField::random_u64(&mut rng);
+            let b = MockField::random_field(&mut rng);
+            let c = MockField::U64(u64::MAX);
+
             let t1 = (a + b) + c;
             let t2 = a + (b + c);
             let t3 = (a + c) + b;
