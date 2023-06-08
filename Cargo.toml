@@ -1,0 +1,34 @@
+[package]
+name = "maybeu64"
+version = "0.1.0"
+edition = "2021"
+description = "Implementation of prime fields with optimizations for u64"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ff = "0.12.0"
+group = "0.12.0"
+subtle = "2.4"
+rand = "0.8"
+rand_core = { version = "0.6", default-features = false }
+pasta_curves = "0.4.0"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+
+
+[dev-dependencies]
+criterion = { version = "0.3", features = ["html_reports"] }
+rand_xorshift = "0.3"
+ark-std = { version = "0.3" }
+bincode = "1.3.3"
+
+
+
+[features]
+default = [ "maybe-u64" ]
+asm = []
+prefetch = []
+print-trace = [ "ark-std/print-trace" ]
+bn256-table = []
+maybe-u64 = []
