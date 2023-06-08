@@ -19,8 +19,16 @@ where
         if bytes.len() != 32 {
             return None;
         }
-        let elt = F::from_raw_bytes_unchecked(bytes);
-        F::is_less_than(&elt, &F::MODULUS).then(|| elt)
+        if bytes.iter().skip(8).all(|x| *x == 0) {
+            Some(Self::U64(u64::from_le_bytes(
+                bytes[0..8].try_into().unwrap(),
+            )))
+        } else {
+            match F::from_raw_bytes(bytes) {
+                Some(p) => Some(Self::Full(p)),
+                None => None,
+            }
+        }
     }
 
     fn to_raw_bytes(&self) -> Vec<u8> {

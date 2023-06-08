@@ -1,9 +1,7 @@
 use std::cmp::Ordering;
 
-use ff::{Field, PrimeField};
-use pasta_curves::arithmetic::{FieldExt, Group, SqrtRatio};
-use rand_core::RngCore;
-use subtle::{Choice, ConstantTimeEq};
+use ff::PrimeField;
+use pasta_curves::arithmetic::{FieldExt, Group};
 
 use crate::MaybeU64;
 
