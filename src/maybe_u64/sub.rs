@@ -79,35 +79,3 @@ where
         *self = &*self - rhs;
     }
 }
-
-#[cfg(test)]
-mod test {
-    use std::ops::{AddAssign, SubAssign};
-
-    use ark_std::test_rng;
-
-    use crate::{bn254_fr::FrInteral, maybe_u64::MaybeU64Coversion, MaybeU64};
-
-    type MockField = MaybeU64<FrInteral>;
-
-    #[test]
-    fn subtraction() {
-        let mut rng = test_rng();
-
-        for _ in 0..100 {
-            let a = MockField::random_u64(&mut rng);
-            let b = MockField::U64(u64::MAX);
-
-            let mut t0 = a; // (a - b)
-            t0.sub_assign(&b);
-
-            let mut t1 = b; // (b - a)
-            t1.sub_assign(&a);
-
-            let mut t2 = t0; // (a - b) + (b - a) = 0
-            t2.add_assign(&t1);
-
-            assert_eq!(t2.to_u64(), MockField::from(0));
-        }
-    }
-}

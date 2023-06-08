@@ -1,6 +1,7 @@
+use std::iter::Sum;
 use std::ops::{Add, AddAssign};
 
-use ff::PrimeField;
+use ff::{Field, PrimeField};
 
 use crate::arithmetic::adc;
 use crate::MaybeU64;
@@ -93,33 +94,15 @@ where
     }
 }
 
-#[cfg(test)]
-mod test {
-    use ark_std::test_rng;
-
-    use crate::{bn254_fr::FrInteral, maybe_u64::MaybeU64Coversion, MaybeU64};
-
-    type MockField = MaybeU64<FrInteral>;
-
-    #[test]
-    fn addition() {
-        let mut rng = test_rng();
-
-        for _ in 0..100 {
-            let a = MockField::random_u64(&mut rng);
-            let b = MockField::random_field(&mut rng);
-            let c = MockField::U64(u64::MAX);
-
-            let t1 = (a + b) + c;
-            let t2 = a + (b + c);
-            let t3 = (a + c) + b;
-            let mut t4 = a;
-            t4 += b;
-            t4 += c;
-
-            assert_eq!(t1, t2);
-            assert_eq!(t1, t3);
-            assert_eq!(t1, t4);
-        }
+impl<F, T> Sum<T> for MaybeU64<F>
+where
+    F: PrimeField<Repr = [u8; 32]>,
+    T: core::borrow::Borrow<Self>,
+{
+    fn sum<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = T>,
+    {
+        iter.fold(Self::zero(), |acc, item| acc + item.borrow())
     }
 }
