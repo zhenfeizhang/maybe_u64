@@ -51,6 +51,15 @@ where
     }
 }
 
+impl<F> From<u32> for MaybeU64<F>
+where
+    F: PrimeField<Repr = [u8; 32]>,
+{
+    fn from(value: u32) -> Self {
+        Self::U64(value as u64)
+    }
+}
+
 impl<F> From<bool> for MaybeU64<F>
 where
     F: PrimeField<Repr = [u8; 32]>,

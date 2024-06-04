@@ -212,7 +212,7 @@ fn random_expansion_tests<F: Field, R: RngCore>(mut rng: R, type_name: String) {
     end_timer!(start);
 }
 
-pub fn random_serialization_test<F: Field +  Serialize + for<'de> Deserialize<'de>>(
+pub fn random_serialization_test<F: Field + Serialize + for<'de> Deserialize<'de>>(
     type_name: String,
 ) {
     let mut rng = XorShiftRng::from_seed([

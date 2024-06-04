@@ -70,7 +70,7 @@ fn subtraction() {
         let mut t2 = t0; // (a - b) + (b - a) = 0
         t2.add_assign(&t1);
 
-        assert_eq!(t2.to_u64(), MockField::from(0));
+        assert_eq!(t2.to_u64(), MockField::from(0u32));
     }
 }
 #[test]

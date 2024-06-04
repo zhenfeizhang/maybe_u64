@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 mod conversion;
 mod field;
 mod misc;
+mod ops;
 mod prime_field;
 mod serdes;
-mod ops;
 #[cfg(test)]
 mod tests;
 
