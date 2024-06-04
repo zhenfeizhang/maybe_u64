@@ -8,7 +8,7 @@ use core::convert::TryInto;
 use core::fmt;
 use core::ops::{Add, Mul, Neg, Sub};
 use ff::PrimeField;
-use pasta_curves::arithmetic::{FieldExt, Group, SqrtRatio};
+// use pasta_curves::arithmetic::{FieldExt, Group, SqrtRatio};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
@@ -149,6 +149,9 @@ field_arithmetic!(FrInteral, MODULUS, INV, sparse);
 field_arithmetic_asm!(FrInteral, MODULUS, INV);
 
 impl ff::Field for FrInteral {
+
+    const ONE: Self = F;
+
     fn random(mut rng: impl RngCore) -> Self {
         Self::from_u512([
             rng.next_u64(),
@@ -162,13 +165,6 @@ impl ff::Field for FrInteral {
         ])
     }
 
-    fn zero() -> Self {
-        Self::zero()
-    }
-
-    fn one() -> Self {
-        Self::one()
-    }
 
     fn double(&self) -> Self {
         self.double()

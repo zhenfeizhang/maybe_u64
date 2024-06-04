@@ -3,8 +3,6 @@ use subtle::{Choice, CtOption};
 
 use crate::MaybeU64;
 
-use super::MaybeU64Coversion;
-
 impl<F> PrimeField for MaybeU64<F>
 where
     F: PrimeField<Repr = [u8; 32]>,
@@ -48,13 +46,15 @@ where
         }
     }
 
-    fn multiplicative_generator() -> Self {
-        // Requires the multiplicative generator is 64 bits
-        // which is true for BN254's scalar field
-        Self::Full(F::multiplicative_generator()).to_u64()
-    }
+    const MODULUS: &'static str = F::MODULUS;
 
-    fn root_of_unity() -> Self {
-        Self::Full(F::root_of_unity())
-    }
+    const DELTA: Self = MaybeU64::Full(F::DELTA);
+
+    const MULTIPLICATIVE_GENERATOR: Self = MaybeU64::Full(F::MULTIPLICATIVE_GENERATOR);
+
+    const ROOT_OF_UNITY: Self = MaybeU64::Full(F::ROOT_OF_UNITY);
+
+    const ROOT_OF_UNITY_INV: Self = MaybeU64::Full(F::ROOT_OF_UNITY_INV);
+
+    const TWO_INV: Self = MaybeU64::Full(F::TWO_INV);
 }

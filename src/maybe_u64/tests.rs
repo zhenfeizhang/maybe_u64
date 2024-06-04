@@ -2,14 +2,15 @@ use std::ops::{AddAssign, MulAssign, Neg, SubAssign};
 
 use ark_std::test_rng;
 use ff::{Field, PrimeField};
-use pasta_curves::arithmetic::FieldExt;
+use halo2curves::bn256::Fr;
+// use pasta_curves::arithmetic::FieldExt;
 use rand_core::RngCore;
 
-use crate::{bn254_fr::FrInteral, maybe_u64::MaybeU64Coversion};
+use crate::maybe_u64::MaybeU64Coversion;
 
 use super::MaybeU64;
 
-type MockField = MaybeU64<FrInteral>;
+type MockField = MaybeU64<Fr>;
 
 // ==========================================
 // New tests added for MaybeU64 structs
@@ -122,15 +123,15 @@ fn test_sqrt() {
 #[test]
 fn test_root_of_unity() {
     assert_eq!(
-        MockField::root_of_unity().pow_vartime(&[1 << MockField::S, 0, 0, 0]),
-        MockField::one()
+        MockField::ROOT_OF_UNITY.pow_vartime(&[1 << MockField::S, 0, 0, 0]),
+        MockField::ONE
     );
 }
 #[test]
 fn test_inv_root_of_unity() {
     assert_eq!(
         MockField::ROOT_OF_UNITY_INV,
-        MockField::root_of_unity().invert().unwrap()
+        MockField::ROOT_OF_UNITY.invert().unwrap()
     );
 }
 
@@ -143,7 +144,7 @@ fn test_field() {
 fn test_delta() {
     assert_eq!(
         MockField::DELTA,
-        MockField::multiplicative_generator().pow(&[1u64 << MockField::S, 0, 0, 0])
+        MockField::MULTIPLICATIVE_GENERATOR.pow(&[1u64 << MockField::S, 0, 0, 0])
     );
 }
 

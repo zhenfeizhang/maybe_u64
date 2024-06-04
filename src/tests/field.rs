@@ -1,6 +1,6 @@
 use std::io::Cursor;
 
-use crate::serde::SerdeObject;
+// use crate::serde::SerdeObject;
 use ark_std::{end_timer, start_timer};
 use ff::Field;
 use rand::{RngCore, SeedableRng};
@@ -22,19 +22,19 @@ pub fn random_field_tests<F: Field>(type_name: String) {
     random_inversion_tests::<F, _>(&mut rng, type_name.clone());
     random_expansion_tests::<F, _>(&mut rng, type_name);
 
-    assert_eq!(F::zero().is_zero().unwrap_u8(), 1);
+    assert_eq!(F::ZERO.is_zero().unwrap_u8(), 1);
     {
-        let mut z = F::zero();
+        let mut z = F::ZERO;
         z = z.neg();
         assert_eq!(z.is_zero().unwrap_u8(), 1);
     }
 
-    assert!(bool::from(F::zero().invert().is_none()));
+    assert!(bool::from(F::ZERO.invert().is_none()));
 
     // Multiplication by zero
     {
         let mut a = F::random(&mut rng);
-        a.mul_assign(&F::zero());
+        a.mul_assign(&F::ZERO);
         assert_eq!(a.is_zero().unwrap_u8(), 1);
     }
 
@@ -42,7 +42,7 @@ pub fn random_field_tests<F: Field>(type_name: String) {
     {
         let mut a = F::random(&mut rng);
         let copy = a;
-        a.add_assign(&F::zero());
+        a.add_assign(&F::ZERO);
         assert_eq!(a, copy);
     }
 }
@@ -163,7 +163,7 @@ fn random_squaring_tests<F: Field, R: RngCore>(mut rng: R, type_name: String) {
 }
 
 fn random_inversion_tests<F: Field, R: RngCore>(mut rng: R, type_name: String) {
-    assert!(bool::from(F::zero().invert().is_none()));
+    assert!(bool::from(F::ZERO.invert().is_none()));
 
     let message = format!("inversion {}", type_name);
     let start = start_timer!(|| message);
@@ -172,7 +172,7 @@ fn random_inversion_tests<F: Field, R: RngCore>(mut rng: R, type_name: String) {
         let b = a.invert().unwrap(); // probablistically nonzero
         a.mul_assign(&b);
 
-        assert_eq!(a, F::one());
+        assert_eq!(a, F::ONE);
     }
     end_timer!(start);
 }
@@ -212,26 +212,26 @@ fn random_expansion_tests<F: Field, R: RngCore>(mut rng: R, type_name: String) {
     end_timer!(start);
 }
 
-pub fn random_serialization_test<F: Field + SerdeObject + Serialize + for<'de> Deserialize<'de>>(
+pub fn random_serialization_test<F: Field +  Serialize + for<'de> Deserialize<'de>>(
     type_name: String,
 ) {
     let mut rng = XorShiftRng::from_seed([
         0x59, 0x62, 0xbe, 0x5d, 0x76, 0x3d, 0x31, 0x8d, 0x17, 0xdb, 0x37, 0x32, 0x54, 0x06, 0xbc,
         0xe5,
     ]);
-    let _message = format!("serialization with SerdeObject {}", type_name);
-    let start = start_timer!(|| _message);
-    for _ in 0..1000000 {
-        let a = F::random(&mut rng);
-        let bytes = a.to_raw_bytes();
-        let b = F::from_raw_bytes(&bytes).unwrap();
-        assert_eq!(a, b);
-        let mut buf = Vec::new();
-        a.write_raw(&mut buf).unwrap();
-        let b = F::read_raw(&mut &buf[..]).unwrap();
-        assert_eq!(a, b);
-    }
-    end_timer!(start);
+    // let _message = format!("serialization with SerdeObject {}", type_name);
+    // let start = start_timer!(|| _message);
+    // for _ in 0..1000000 {
+    //     let a = F::random(&mut rng);
+    //     let bytes = a.to_raw_bytes();
+    //     let b = F::from_raw_bytes(&bytes).unwrap();
+    //     assert_eq!(a, b);
+    //     let mut buf = Vec::new();
+    //     a.write_raw(&mut buf).unwrap();
+    //     let b = F::read_raw(&mut &buf[..]).unwrap();
+    //     assert_eq!(a, b);
+    // }
+    // end_timer!(start);
 
     let _message = format!("serialization with serde {}", type_name);
     let start = start_timer!(|| _message);

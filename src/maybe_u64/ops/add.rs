@@ -103,6 +103,6 @@ where
     where
         I: Iterator<Item = T>,
     {
-        iter.fold(Self::zero(), |acc, item| acc + item.borrow())
+        iter.fold(Self::ZERO, |acc, item| acc + item.borrow())
     }
 }

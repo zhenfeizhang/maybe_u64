@@ -1,6 +1,9 @@
-use std::ops::{Mul, MulAssign};
+use std::{
+    iter::Product,
+    ops::{Mul, MulAssign},
+};
 
-use ff::PrimeField;
+use ff::{Field, PrimeField};
 
 use crate::{arithmetic::mac, MaybeU64};
 
@@ -88,5 +91,18 @@ where
     #[inline]
     fn mul_assign(&mut self, rhs: &'b MaybeU64<F>) {
         *self = &*self * rhs;
+    }
+}
+
+impl<F, T> Product<T> for MaybeU64<F>
+where
+    F: PrimeField<Repr = [u8; 32]>,
+    T: core::borrow::Borrow<Self>,
+{
+    fn product<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = T>,
+    {
+        iter.fold(Self::ONE, |acc, item| acc * item.borrow())
     }
 }

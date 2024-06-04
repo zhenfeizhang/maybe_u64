@@ -6,23 +6,23 @@
 
 use subtle::{Choice, ConditionallySelectable, CtOption};
 
-pub trait CurveAffineExt: pasta_curves::arithmetic::CurveAffine {
-    fn batch_add<const COMPLETE: bool, const LOAD_POINTS: bool>(
-        points: &mut [Self],
-        output_indices: &[u32],
-        num_points: usize,
-        offset: usize,
-        bases: &[Self],
-        base_positions: &[u32],
-    );
+// pub trait CurveAffineExt: pasta_curves::arithmetic::CurveAffine {
+//     fn batch_add<const COMPLETE: bool, const LOAD_POINTS: bool>(
+//         points: &mut [Self],
+//         output_indices: &[u32],
+//         num_points: usize,
+//         offset: usize,
+//         bases: &[Self],
+//         base_positions: &[u32],
+//     );
 
-    /// Unlike the `Coordinates` trait, this just returns the raw affine coordinates without checking `is_on_curve`
-    fn into_coordinates(self) -> (Self::Base, Self::Base) {
-        // fallback implementation
-        let coordinates = self.coordinates().unwrap();
-        (*coordinates.x(), *coordinates.y())
-    }
-}
+//     /// Unlike the `Coordinates` trait, this just returns the raw affine coordinates without checking `is_on_curve`
+//     fn into_coordinates(self) -> (Self::Base, Self::Base) {
+//         // fallback implementation
+//         let coordinates = self.coordinates().unwrap();
+//         (*coordinates.x(), *coordinates.y())
+//     }
+// }
 
 pub(crate) fn sqrt_tonelli_shanks<F: ff::PrimeField, S: AsRef<[u64]>>(
     f: &F,
@@ -38,7 +38,7 @@ pub(crate) fn sqrt_tonelli_shanks<F: ff::PrimeField, S: AsRef<[u64]>>(
     let mut b = x * w;
 
     // Initialize z as the 2^S root of unity.
-    let mut z = F::root_of_unity();
+    let mut z = F::ROOT_OF_UNITY;
 
     for max_v in (1..=F::S).rev() {
         let mut k = 1;
@@ -46,7 +46,7 @@ pub(crate) fn sqrt_tonelli_shanks<F: ff::PrimeField, S: AsRef<[u64]>>(
         let mut j_less_than_v: Choice = 1.into();
 
         for j in 2..max_v {
-            let tmp_is_one = tmp.ct_eq(&F::one());
+            let tmp_is_one = tmp.ct_eq(&F::ONE);
             let squared = F::conditional_select(&tmp, &z, tmp_is_one).square();
             tmp = F::conditional_select(&squared, &tmp, tmp_is_one);
             let new_z = F::conditional_select(&z, &squared, tmp_is_one);
@@ -56,7 +56,7 @@ pub(crate) fn sqrt_tonelli_shanks<F: ff::PrimeField, S: AsRef<[u64]>>(
         }
 
         let result = x * z;
-        x = F::conditional_select(&result, &x, b.ct_eq(&F::one()));
+        x = F::conditional_select(&result, &x, b.ct_eq(&F::ONE));
         z = z.square();
         b *= z;
         v = k;

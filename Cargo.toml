@@ -7,13 +7,14 @@ description = "Implementation of prime fields with optimizations for u64"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ff = "0.12.0"
-group = "0.12.0"
+ff = { version = "0.13.0", default-features = false, features = ["std"] }
+# group = "0.12.0"
 subtle = "2.4"
 rand = "0.8"
 rand_core = { version = "0.6", default-features = false }
-pasta_curves = "0.4.0"
+# pasta_curves = "0.4.0"
 serde = { version = "1.0", default-features = false, features = ["derive"] }
+halo2curves = { git = "https://github.com/zhenfeizhang/halo2curves", default-features = false, features = [ "bits", "bn256-table", "derive_serde" ] }
 
 
 

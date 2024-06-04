@@ -2,16 +2,12 @@ use ff::PrimeField;
 use rand_core::RngCore;
 use serde::{Deserialize, Serialize};
 
-mod add;
 mod conversion;
 mod field;
-mod field_ext;
 mod misc;
-mod mul;
-mod neg;
 mod prime_field;
 mod serdes;
-mod sub;
+mod ops;
 #[cfg(test)]
 mod tests;
 
